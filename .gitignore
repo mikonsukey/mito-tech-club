@@ -1,0 +1,4 @@
+# 顔のデータ（謎ノ美兎の画像から作ったもの）は Git に入れない
+assets/*
+!assets/README.md
+.DS_Store
