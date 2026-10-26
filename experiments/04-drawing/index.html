@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>たのしいお絵描き | 謎ノ美兎技術部（mito-tech-club）</title>
+<style>
+body{margin:0;background:#f6f3ec;color:#1b1b1b;font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.7}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:8px 0 4px}
+.lead{margin:0 0 14px}
+.links{font-size:14px;margin:0 0 18px}
+.links a{color:#c62019;margin-right:14px}
+.note{font-size:12px;color:#6b6660;margin-top:24px;border-top:1px solid #ddd6ca;padding-top:12px}
+.back{font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<p class="back"><a href="../../">← 謎ノ美兎技術部（mito-tech-club）</a></p>
+<h1>たのしいお絵描き</h1>
+<p class="lead">描いた線がぐにゃぐにゃ動き出して、手を止めると謎ノ美兎の線画に寄っていきます。線の長さは変わらないので、たくさん描くほど完成に近づきます。</p>
+<p class="links"><a href="https://zuariya.com/gunya-sen-paint/">ブログの記事</a><a href="https://youtu.be/wGSVN_Mp-Xk">解説動画</a></p>
+<p class="note" id="srcnote"></p>
+<div id="ezn-gunya"></div>
+<p class="note">月ノ美兎（にじさんじ）の非公式ファン作品です。ANYCOLOR株式会社とは関係ありません。画像はこの端末のブラウザの中だけで処理されます。</p>
+</main>
+<script src="../../assets/mito-assets.js"></script>
+<script src="../../lib/mito-assets.js"></script>
+<script>document.getElementById("srcnote").textContent = MITO_ASSETS.source==="sample" ? "いまは見本の顔で動いています。謎ノ美兎で試すには、README の「自分の画像で試す」を見てください。" : "assets/mito-assets.js の顔で動いています。";</script>
+<script src="ezn-gunya.js"></script>
+</body>
+</html>
