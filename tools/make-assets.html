@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>顔のデータを作る | 謎ノ美兎技術部（mito-tech-club）</title>
+<style>
+body{margin:0;background:#f6f3ec;color:#1b1b1b;font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.7}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:8px 0}
+button,label.btn{display:inline-block;padding:10px 16px;border:2px solid #1b1b1b;border-radius:6px;background:#fff;font:inherit;font-weight:700;cursor:pointer;margin:4px 8px 4px 0}
+button.primary{background:#c62019;border-color:#c62019;color:#fff}
+button:disabled{opacity:.4;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
+.grid figure{margin:0;background:#fff;border:1px solid #ddd6ca;border-radius:6px;padding:6px}
+.grid canvas,.grid img{display:block;width:100%;height:auto;background:#000;image-rendering:pixelated}
+.grid figcaption{font-size:12px;color:#6b6660;margin-top:4px}
+.hint{font-size:13px;color:#6b6660}
+</style>
+</head>
+<body>
+<main>
+<p><a href="../">← 謎ノ美兎技術部（mito-tech-club）</a></p>
+<h1>顔のデータを作る</h1>
+<p>顔の画像を1枚読み込むと、全部の実験で使うデータ（<code>mito-assets.js</code>）を作ります。できたファイルを <code>assets/</code> フォルダに置くと、各実験がその顔で動きます。</p>
+<p class="hint">・顔が正方形の真ん中に来る画像を選んでください（はみ出した部分は切り落とします）。<br>・背景を透明にしたPNGだと、スペクトログラムの型押しや写真の透かしがきれいに出ます。<br>・画像はこの端末のブラウザの中だけで処理されます。どこにも送りません。</p>
+<p>
+<label class="btn">画像を読み込む<input type="file" accept="image/*" id="file" hidden></label>
+<button id="sample">見本の顔で試す</button>
+<button class="primary" id="save" disabled>mito-assets.js を保存</button>
+</p>
+<p id="msg" class="hint"></p>
+<div class="grid" id="grid"></div>
+</main>
+<script>window.MITO_ASSETS = { source: 'tool' };</script>
+<script src="../lib/mito-assets.js"></script>
+<script>
+(function () {
+  var out = null, grid = document.getElementById('grid'), msg = document.getElementById('msg'), save = document.getElementById('save');
+  function fig(src, cap) {
+    var f = document.createElement('figure'), im = new Image(); im.src = src; f.appendChild(im);
+    var c = document.createElement('figcaption'); c.textContent = cap; f.appendChild(c); grid.appendChild(f);
+  }
+  function figCanvas(draw, w, h, cap) {
+    var f = document.createElement('figure'), c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'));
+    f.appendChild(c); var t = document.createElement('figcaption'); t.textContent = cap; f.appendChild(t); grid.appendChild(f);
+  }
+  function show(a) {
+    grid.innerHTML = '';
+    fig(a.face, 'face（ピクセル並べ替え）'); fig(a.tone, 'tone（ソート）'); fig(a.stamp, 'stamp（型押し・写真）'); fig(a.line, 'line（線画）');
+    figCanvas(function (g) { var n = 64, b = a.bits[n], im = g.createImageData(n, n); for (var i = 0; i < n * n; i++) { var v = b[i] === '1' ? 255 : 0; im.data[i * 4] = im.data[i * 4 + 1] = im.data[i * 4 + 2] = v; im.data[i * 4 + 3] = 255; } g.putImageData(im, 0, 0); }, 64, 64, 'bits 64×64（透かし）');
+    figCanvas(function (g) { g.fillStyle = '#000'; g.fillRect(0, 0, 640, 480); g.strokeStyle = '#fff'; g.lineWidth = 2; a.polylines.forEach(function (p) { g.beginPath(); p.forEach(function (q, i) { i ? g.lineTo(q[0], q[1]) : g.moveTo(q[0], q[1]); }); g.stroke(); }); }, 640, 480, '折れ線 ' + a.polylines.length + '本（お絵描き・針）');
+  }
+  function use(img) {
+    out = MitoAssets.build(img); out.source = 'file'; show(out); save.disabled = false;
+    msg.textContent = 'できました。線画の折れ線は ' + out.polylines.length + ' 本です。少なすぎるときは、輪郭のはっきりした画像を使ってください。';
+  }
+  document.getElementById('file').onchange = function (e) {
+    var f = e.target.files[0]; if (!f) return; var u = URL.createObjectURL(f), im = new Image();
+    im.onload = function () { use(im); URL.revokeObjectURL(u); }; im.src = u;
+  };
+  document.getElementById('sample').onclick = function () { use(MitoAssets.sampleFace()); };
+  save.onclick = function () {
+    if (!out) return;
+    var body = '/* tools/make-assets.html で作った顔のデータ。このファイルは Git に入れません（.gitignore 済み）。 */\nwindow.MITO_ASSETS = ' + JSON.stringify(out) + ';\n';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], { type: 'text/javascript' })); a.download = 'mito-assets.js';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  };
+})();
+</script>
+</body>
+</html>
