@@ -3,7 +3,7 @@
 月ノ美兎（にじさんじ）の **非公式ファン技術実験** のコード置き場です。
 ソートで画像を並べ替えて謎ノ美兎の顔にする、音や文章に顔を隠す、針を落として円周率と顔を出す……といった実験を、ブラウザだけで動く形で置いています。
 
-> Unofficial fan-made experiments featuring **Tsukino Mito (月ノ美兎, Nijisanji)** and her drawing "謎ノ美兎".
+> Unofficial fan-made experiments featuring **Tsukino Mito (月ノ美兎, Nijisanji)** and "謎ノ美兎".
 > Every tool runs entirely in your browser. Japanese UI; see [English](#english) below.
 
 - ブログ（記事のまとめ）：[謎ノ美兎技術部｜ミコンスキーの部屋](https://zuariya.com/nazono-tech/)
